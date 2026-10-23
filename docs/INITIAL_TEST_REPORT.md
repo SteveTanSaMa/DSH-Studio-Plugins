@@ -8,6 +8,10 @@
 
 测试环境：macOS arm64；Node 26.12.1；Harness、官方市场和索引校验器均为 0.2.1-rc.2；pnpm 11.22.0。版本写入 package-lock.json，CI 使用同一 Node 和依赖锁。
 
+## 远程复现
+
+私有仓库 Actions [39944117200](https://github.com/SteveTanSaMa/DSH-Studio-Plugins/actions/runs/39944117200) 对实现提交 `cf2ac9a` 验证通过：Linux 干净环境安装依赖、5 项生成器测试、在线重建与校验、1 项真实 Harness 集成测试全部成功，任务用时 31 秒。已下载并核对该次私有预览附件：Node 为 26.12.1，候选版本和检查状态与本地一致。
+
 ## 候选发布包
 
 | 候选 | 精确版本 | tarball 大小 | 发布包检查 | 插件功能测试 |
