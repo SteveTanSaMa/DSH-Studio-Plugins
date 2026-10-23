@@ -12,7 +12,10 @@
     "check": "node scripts/check.mjs",
     "test": "node --test tests/*.test.mjs",
     "test:integration": "node --test tests/integration/*.test.mjs",
-    "serve": "node scripts/serve.mjs"
+    "serve": "node scripts/serve.mjs",
+    "candidates:prepare": "node scripts/prepare-candidates.mjs",
+    "candidates:web": "node scripts/serve-candidates.mjs",
+    "snapshot": "node scripts/snapshot.mjs"
   },
   "dependencies": {
     "@deepseek-ai/dsh-plugin-market-index": "0.2.1-rc.2",

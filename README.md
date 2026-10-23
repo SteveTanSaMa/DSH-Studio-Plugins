@@ -2,7 +2,7 @@
 
 DSH Studio 的插件索引原型，供官方 Custom plugin markets 读取。
 
-当前仅包含两个用于技术测试的精确 npm 版本，**不是已通过 Studio 功能验证的推荐清单**。仓库已公开，索引通过 GitHub Raw 提供。
+当前包含两个精确 npm 版本，已在 macOS arm64 完成安装、启用、Web 加载与卸载验证，**完整功能和跨架构验收尚未完成，继续作为测试候选**。仓库已公开，索引通过 GitHub Raw 提供。
 
 ## 添加索引源
 
@@ -29,7 +29,7 @@ npm run serve
 
 最后一条命令打印仅本机可访问的临时 HTTP 索引链接；可在同一台机器的 Harness 中启用 Custom plugin markets，并主动添加该链接。结束服务后此链接失效，请从测试 Profile 移除。远程 Harness 无法访问本机 loopback 地址。
 
-测试使用临时目录和隔离 Profile，不读取或修改用户已有 Profile。社区候选只下载与检查发布包；集成测试实际安装、启用、卸载的是本地生成的无依赖测试 bundle。官方 Host/Settings/Plugin Manager 与真实 pnpm 参与测试；没有模拟这些服务。
+测试使用临时目录和隔离 Profile，不读取或修改用户已有 Profile。上述自动测试只下载与检查社区发布包；集成测试实际安装、启用、卸载的是本地生成的无依赖测试 bundle。官方 Host/Settings/Plugin Manager 与真实 pnpm 参与测试；没有模拟这些服务。
 
 ## 文件与职责
 
@@ -38,10 +38,12 @@ npm run serve
 | `data/sources.json` | 精确包版本、已审核的 SHA-512、目标 Harness 版本 |
 | `data/curation.json` | 中英说明、分类；候选必须注明验证状态 |
 | `data/withdrawn.json` | 下架包名、可选版本和原因 |
+| `data/verification.json` | 与精确包身份绑定的人工运行验收记录 |
 | `public/index.json` | 自动生成的官方 format 1 索引 |
 | `public/status.json` | 发布包身份、许可证、兼容声明、体积、检查时间与未执行的功能测试 |
 | `docs/PLAN.md` | 初步验证计划 |
-| `docs/INITIAL_TEST_REPORT.md` | 实际结果与边界 |
+| `docs/INITIAL_TEST_REPORT.md` | 初步链路验证结果 |
+| `docs/CANDIDATE_TEST_REPORT.md` | 真实候选验收结果与截图 |
 
 索引更新独立于 App 与 Runtime 发布；Runtime 签名目录不承担社区索引的信任含义。源列表只属于 Harness Profile，不在 Studio 另外存一份。
 
@@ -66,3 +68,24 @@ npm run serve
 ```sh
 DSH_MARKET_SOURCE_URL=https://raw.githubusercontent.com/SteveTanSaMa/DSH-Studio-Plugins/main/public/index.json npm run test:integration
 ```
+
+## 真实候选复测
+
+```sh
+npm run candidates:prepare
+npm run candidates:web
+```
+
+使用固定的项目内 `TestRuntime/`，保留 Profile、缓存和日志供手动删除。准备命令会重设该测试 Profile 的基础配置；运行前先停止已有测试服务。它通过官方 Plugin Manager 安装两个精确候选且默认停用；启动后可在官方插件页逐一启用、测试。连接信息写入 `TestRuntime/ready.json`，含本机连接令牌，不提交到 Git。
+
+## 保存与恢复索引
+
+```sh
+npm run snapshot -- save before-update
+# 更新清单、生成产物并验证；需要恢复时：
+npm run snapshot -- restore before-update
+npm run check
+git diff
+```
+
+快照位于 `TestRuntime/snapshots/`。恢复只修改本地清单与产物，保留当前下架记录；若旧快照包含已下架条目，会拒绝恢复。撤回全部候选时可明确设置空清单，并发布空索引。更新、下架与恢复均通过正常 Git 提交更新 Raw 地址。

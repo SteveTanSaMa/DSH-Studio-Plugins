@@ -4,3 +4,4 @@ node_modules/
 *.log
 .index-stage/
 .index-backup/
+TestRuntime/

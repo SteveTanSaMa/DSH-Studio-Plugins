@@ -17,7 +17,7 @@ const runtime = fileURLToPath(new URL('.', pathToFileURL(require.resolve('@deeps
 const pnpm = fileURLToPath(new URL('../../node_modules/pnpm/bin/pnpm.mjs', import.meta.url));
 const marketBundle = '@deepseek-ai/dsh-experimental-plugin-market-bundle';
 const fixtureName = 'studio-index-install-fixture';
-const query = { offset: 0, limit: 10, sort: { kind: 'index' } };
+const query = { offset: 0, limit: 100, sort: { kind: 'index' } };
 
 test('real official Host reads the generated index, persists sources and installs a loopback fixture', { timeout: 120000 }, async t => {
   const home = await realpath(await mkdtemp(join(tmpdir(), 'studio-index-integration-')));
@@ -104,7 +104,7 @@ test('real official Host reads the generated index, persists sources and install
       assert.equal(entry?.defaultVersion, pin.version);
       assert.equal(entry.versions[0].install.spec, `${pin.name}@${pin.version}`);
     }
-    t.diagnostic('Anonymous GitHub Raw source read by the real official Host: both pinned candidates found');
+    t.diagnostic('Anonymous GitHub Raw source read by the real official Host: all selected pinned candidates found');
   }
   await ctx.pluginMarket.setIndexes([source]);
   const listing = await ctx.pluginMarket.search(source, query);
@@ -116,13 +116,14 @@ test('real official Host reads the generated index, persists sources and install
     assert.equal(entry.versions[0].compatibility.compatible, true);
     assert.equal(entry.installation.status, 'not-installed');
   }
-  for (const text of ['费用', 'Cost Meter', '文件变更', 'File Review']) {
-    assert.equal((await ctx.pluginMarket.search(source, { ...query, text })).total, 1, text);
+  for (const [name, terms] of [['dsh-cost-meter', ['费用', 'Cost Meter']], ['dsh-file-review', ['文件变更', 'File Review']]]) {
+    if (!expected.packages.some(pin => pin.name === name)) continue;
+    for (const text of terms) assert.equal((await ctx.pluginMarket.search(source, { ...query, text })).total, 1, text);
   }
   assert.equal(hits.get('/index.json'), 1, 'successful index reads are cached');
   document = { ...document, plugins: document.plugins.slice(0, 1) };
-  assert.equal((await ctx.pluginMarket.search(source, query)).total, 2);
-  assert.equal((await ctx.pluginMarket.search(source, { ...query, refresh: true })).total, 1);
+  assert.equal((await ctx.pluginMarket.search(source, query)).total, expected.packages.length);
+  assert.equal((await ctx.pluginMarket.search(source, { ...query, refresh: true })).total, Math.min(1, expected.packages.length));
   assert.equal(hits.get('/index.json'), 2);
   await ctx.pluginMarket.setIndexes([source, origin + '/redirect', origin + '/invalid']);
   await assert.rejects(ctx.pluginMarket.search(origin + '/redirect', query), { code: 'plugin-market/fetch-failed' });
@@ -132,7 +133,7 @@ test('real official Host reads the generated index, persists sources and install
   await ctx.pluginMarket.setIndexes([source]); await stop(ctx); ctx = await start('web');
   assert.equal(ctx.pluginMarket.listIndexes()[0].url, source, 'source persists after restart');
   const other = await start('other-web'); assert.deepEqual(other.pluginMarket.listIndexes(), []); await stop(other);
-  t.diagnostic('Generated two-package index: bilingual search, exact targets, cache, refresh, errors, persistence and profile isolation passed');
+  t.diagnostic('Generated index: bilingual search, exact targets, cache, refresh, errors, persistence and profile isolation passed');
 
   const fixtureSource = origin + '/fixture-index.json'; await ctx.pluginMarket.setIndexes([source, fixtureSource]);
   const entry = (await ctx.pluginMarket.search(fixtureSource, query)).entries[0];

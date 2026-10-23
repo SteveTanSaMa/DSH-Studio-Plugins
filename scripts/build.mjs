@@ -29,7 +29,7 @@ export function validateSelection(config, withdrawn) {
   assert.equal(config.format, 1);
   assert.equal(semver.valid(config.runtimeVersion), config.runtimeVersion, 'exact Runtime version required');
   assert.equal(config.registry, 'https://registry.npmjs.org/');
-  assert.ok(Array.isArray(config.packages) && config.packages.length > 0, 'empty candidate list');
+  assert.ok(Array.isArray(config.packages), 'candidate list must be an array');
   assert.ok(Array.isArray(withdrawn.packages));
   const names = new Set();
   for (const entry of config.packages) {
@@ -102,12 +102,21 @@ export function buildIndex(plugins) {
   parseMarketIndex(index, indexURL);
   return index;
 }
+export function matchingVerification(pin, runtimeVersion, records) {
+  return records.filter(record => record.name === pin.name && record.version === pin.version &&
+    record.integrity === pin.integrity && record.runtimeVersion === runtimeVersion);
+}
 export async function build({ directory = root, fetchBytes = download } = {}) {
   const json = async path => JSON.parse(await readFile(join(directory, path), 'utf8'));
   const [config, curation, withdrawn] = await Promise.all([
     json('data/sources.json'), json('data/curation.json'), json('data/withdrawn.json')
   ]);
   validateSelection(config, withdrawn);
+  const verification = await json('data/verification.json').catch(error => {
+    if (error.code === 'ENOENT') return { schema: 1, records: [] };
+    throw error;
+  });
+  assert.equal(verification.schema, 1); assert.ok(Array.isArray(verification.records));
   const plugins = [], packages = [];
   for (const pin of config.packages) {
     const metadataURL = new URL(encodeURIComponent(pin.name), config.registry);
@@ -132,9 +141,11 @@ export async function build({ directory = root, fetchBytes = download } = {}) {
       versions: [{ version: pin.version, publishTimestamp: Math.floor(Date.parse(published) / 1000),
         source: { type: 'npm', registry: config.registry }, engines: { dsh: manifest.engines.dsh } }]
     });
+    const checks = matchingVerification(pin, config.runtimeVersion, verification.records);
     packages.push({ name: pin.name, version: pin.version, integrity: pin.integrity,
       tarball: tarballURL.href, bytes: bytes.length, license: manifest.license, patches,
-      engines: manifest.engines, publishedAt: published, packageCheck: 'passed', functionalTest: 'not-run' });
+      engines: manifest.engines, publishedAt: published, packageCheck: 'passed',
+      functionalTest: checks.length ? 'partial' : 'not-run', ...(checks.length ? { verification: checks } : {}) });
   }
   const index = buildIndex(plugins);
   const evidence = { schema: 1, checkedAt: new Date().toISOString(), runtimeVersion: config.runtimeVersion,

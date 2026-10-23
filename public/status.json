@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "checkedAt": "2026-10-23T11:04:00.896Z",
+  "checkedAt": "2026-10-23T12:58:43.409Z",
   "runtimeVersion": "0.2.1-rc.2",
   "node": "v26.12.1",
   "validatorVersion": "0.2.1-rc.2",
@@ -21,7 +21,27 @@
       },
       "publishedAt": "2026-10-23T06:56:18.952Z",
       "packageCheck": "passed",
-      "functionalTest": "not-run"
+      "functionalTest": "partial",
+      "verification": [
+        {
+          "name": "dsh-cost-meter",
+          "version": "1.9.28",
+          "runtimeVersion": "0.2.1-rc.2",
+          "nodeVersion": "26.12.1",
+          "platform": "macos",
+          "architecture": "arm64",
+          "checkedAt": "2026-10-23T12:57:50.483525+00:00",
+          "checks": {
+            "installation": "passed",
+            "webActivation": "passed",
+            "disable": "passed",
+            "uninstall": "passed"
+          },
+          "functionalTest": "partial",
+          "report": "docs/CANDIDATE_TEST_REPORT.md",
+          "integrity": "sha512-aizlBxDGE0Q1ISvbGG25AlLMC/xRPZVCKTjPbYC348gWGoakIrgNx0++FE1M/Mncj7DHdpoSkIuGtl9oSWRzqA=="
+        }
+      ]
     },
     {
       "name": "dsh-file-review",
@@ -38,7 +58,28 @@
       },
       "publishedAt": "2026-10-17T09:37:15.848Z",
       "packageCheck": "passed",
-      "functionalTest": "not-run"
+      "functionalTest": "partial",
+      "verification": [
+        {
+          "name": "dsh-file-review",
+          "version": "0.8.10",
+          "runtimeVersion": "0.2.1-rc.2",
+          "nodeVersion": "26.12.1",
+          "platform": "macos",
+          "architecture": "arm64",
+          "checkedAt": "2026-10-23T12:57:50.484660+00:00",
+          "checks": {
+            "installation": "passed",
+            "webActivation": "passed",
+            "disable": "passed",
+            "uninstall": "passed",
+            "settingsPersistence": "passed"
+          },
+          "functionalTest": "partial",
+          "report": "docs/CANDIDATE_TEST_REPORT.md",
+          "integrity": "sha512-yq38bCilGUuvhgKget6LBgyjL5HT4MkUS64TLokAPgBp0ywCOxCrBMqL0iflgWUm8kXCFrsRzlM1qh6NLDYRxA=="
+        }
+      ]
     }
   ]
 }
