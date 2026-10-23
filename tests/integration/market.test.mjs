@@ -93,6 +93,19 @@ test('real official Host reads the generated index, persists sources and install
   async function stop(ctx) { await ctx.fiber.dispose(); roots.delete(ctx); }
   const profileDir = await prepare('web'); await prepare('other-web');
   let ctx = await start('web');
+  if (process.env.DSH_MARKET_SOURCE_URL) {
+    const remote = process.env.DSH_MARKET_SOURCE_URL;
+    assert.ok(remote.startsWith('https://raw.githubusercontent.com/'));
+    await ctx.pluginMarket.setIndexes([remote]);
+    const published = await ctx.pluginMarket.search(remote, { ...query, refresh: true });
+    assert.equal(published.total, expected.packages.length);
+    for (const pin of expected.packages) {
+      const entry = published.entries.find(entry => entry.name === pin.name);
+      assert.equal(entry?.defaultVersion, pin.version);
+      assert.equal(entry.versions[0].install.spec, `${pin.name}@${pin.version}`);
+    }
+    t.diagnostic('Anonymous GitHub Raw source read by the real official Host: both pinned candidates found');
+  }
   await ctx.pluginMarket.setIndexes([source]);
   const listing = await ctx.pluginMarket.search(source, query);
   assert.equal(listing.total, expected.packages.length);

@@ -10,7 +10,7 @@ import { parseMarketIndex } from '@deepseek-ai/dsh-plugin-market-index';
 import { evaluatePluginCompatibility } from '@deepseek-ai/dsh-app-boot';
 
 export const root = fileURLToPath(new URL('../', import.meta.url));
-export const indexURL = 'http://127.0.0.1/index.json';
+export const indexURL = 'https://raw.githubusercontent.com/SteveTanSaMa/DSH-Studio-Plugins/main/public/index.json';
 const maxPackageBytes = 32 * 1024 * 1024;
 export function allowedURL(value, origin) {
   const url = new URL(value);

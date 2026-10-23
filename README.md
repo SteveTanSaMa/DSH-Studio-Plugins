@@ -1,8 +1,18 @@
 # DSH Studio Plugins
 
-DSH Studio 的私有插件索引原型，供官方 Custom plugin markets 读取。
+DSH Studio 的插件索引原型，供官方 Custom plugin markets 读取。
 
-当前仅包含两个用于技术测试的精确 npm 版本，**不是已通过 Studio 功能验证的推荐清单**。本仓库不公开部署，GitHub 项目页、文件浏览页和需要登录的 raw URL 不能直接作为 Discover 源。
+当前仅包含两个用于技术测试的精确 npm 版本，**不是已通过 Studio 功能验证的推荐清单**。仓库已公开，索引通过 GitHub Raw 提供。
+
+## 添加索引源
+
+在 Harness 中启用 **Custom plugin markets**，进入 **Discover → Add index source**，粘贴：
+
+```text
+https://raw.githubusercontent.com/SteveTanSaMa/DSH-Studio-Plugins/main/public/index.json
+```
+
+这是直接返回 JSON 的固定地址，不需要登录或访问令牌。GitHub 项目页与文件浏览页不是索引地址。检查记录为同目录下的 `status.json`。
 
 ## 本地使用
 
@@ -39,14 +49,20 @@ npm run serve
 
 1. 新版本进入 PR，同时更新精确版本和 SHA-512；不使用 `latest`、版本范围或浮动 Git 分支。
 2. 运行发布包核验、官方格式校验和集成测试，补充真实功能测试记录。
-3. 审核后合并。CI 只生成私有预览附件，不自动发布网站、不修改 App 设置。
+3. 审核后合并。将重新生成的 `public/index.json` 与 `public/status.json` 一起提交；合并到 `main` 后 Raw 地址随之更新。CI 另外生成预览附件，不自动提交重建结果、不修改 App 设置。
 4. 上游临时失败时构建失败并保留上次完整产物；不会偷偷减少插件或改用未经审核版本。
-5. 下架时同时从 `sources.json` 与 `curation.json` 移除并写入 `withdrawn.json`，重新生成；若清单仍包含下架条目，CI 拒绝构建。已发布旧源仍可能保留该版本，正式部署时需完成替换和缓存验证。下架不会自动卸载用户已有插件。
+5. 下架时同时从 `sources.json` 与 `curation.json` 移除并写入 `withdrawn.json`，重新生成；若清单仍包含下架条目，CI 拒绝构建。已发布旧源仍可能保留该版本，更新 Raw 产物时需完成替换和缓存验证。下架不会自动卸载用户已有插件。
 
-每周一 CI 重新核验精确版本，检测失效、撤回和完整性变化；没有自动批准新版本的步骤。生成失败不会覆盖 `public/`，正式部署仍需选择支持完整目录切换的静态托管方案。
+每周一 CI 重新核验精确版本，检测失效、撤回和完整性变化；没有自动批准新版本的步骤。生成失败不会覆盖 `public/`，两个产物随同一次 Git 提交更新。回滚时恢复已知有效的 `public/` 文件并提交，不强制改写历史。
 
-## 后续发布约定
+## Raw 地址与缓存
 
-正式源预期采用稳定 HTTPS 路径 `/index.json`，直接返回 200 JSON，无重定向、登录或令牌要求。预览源采用独立路径。当前没有已部署的公网插件链接。
+`main/public/index.json` 是长期使用的源地址。按提交 SHA 构造的 Raw URL 可用于固定快照复核；日常用户继续使用上面的 `main` 地址。本次 Raw 响应的缓存时长为 300 秒，Harness 成功读取后的默认缓存为 10 分钟，更新不会立即到达所有客户端；需要时在官方市场手动刷新。移除条目不会让历史 Git 快照失效，也不会自动卸载已安装插件。
 
-正式发布前还需真实候选的 Web UI/功能与 macOS 架构验证、部署与回滚演练及网络可达性验证。将来在 Studio 提供添加按钮时，仅通过官方 `setIndexes` 追加并保留其他源，尊重用户删除。
+从测试候选转为正式推荐前，还需真实候选的 Web UI/功能与 macOS 架构验证、回滚演练及网络可达性验证。将来在 Studio 提供添加按钮时，仅通过官方 `setIndexes` 追加并保留其他源，尊重用户删除。
+
+复核公网 Raw 源及本地集成链路：
+
+```sh
+DSH_MARKET_SOURCE_URL=https://raw.githubusercontent.com/SteveTanSaMa/DSH-Studio-Plugins/main/public/index.json npm run test:integration
+```
