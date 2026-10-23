@@ -1,0 +1,12 @@
+{
+  "dsh-cost-meter": {
+    "title": { "en": "Cost Meter", "zh": "用量与费用" },
+    "description": { "en": "Shows usage and costs. Index test candidate; functionality has not been verified by DSH Studio.", "zh": "查看用量与费用。用于索引链路测试，尚未通过 Studio 功能验证。" },
+    "category": "usage"
+  },
+  "dsh-file-review": {
+    "title": { "en": "File Review", "zh": "文件变更审阅" },
+    "description": { "en": "Reviews file changes. Index test candidate; functionality has not been verified by DSH Studio.", "zh": "查看和审阅文件变更。用于索引链路测试，尚未通过 Studio 功能验证。" },
+    "category": "development"
+  }
+}

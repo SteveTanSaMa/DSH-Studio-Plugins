@@ -1,0 +1,37 @@
+name: Validate plugin index
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    - cron: '23 2 * * 1'
+permissions:
+  contents: read
+concurrency:
+  group: index-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
+          cache: npm
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Test generation and preservation on failure
+        run: npm test
+      - name: Recheck pinned upstream packages and generate candidate index
+        run: npm run build
+      - run: npm run check
+      - name: Test real Harness market and isolated package lifecycle
+        run: npm run test:integration
+      - name: Save private preview and package evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: plugin-index-preview-${{ github.sha }}
+          path: public/
+          retention-days: 14

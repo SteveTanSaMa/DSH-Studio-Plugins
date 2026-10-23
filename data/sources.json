@@ -1,0 +1,17 @@
+{
+  "format": 1,
+  "runtimeVersion": "0.2.1-rc.2",
+  "registry": "https://registry.npmjs.org/",
+  "packages": [
+    {
+      "name": "dsh-cost-meter",
+      "version": "1.9.28",
+      "integrity": "sha512-aizlBxDGE0Q1ISvbGG25AlLMC/xRPZVCKTjPbYC348gWGoakIrgNx0++FE1M/Mncj7DHdpoSkIuGtl9oSWRzqA=="
+    },
+    {
+      "name": "dsh-file-review",
+      "version": "0.8.10",
+      "integrity": "sha512-yq38bCilGUuvhgKget6LBgyjL5HT4MkUS64TLokAPgBp0ywCOxCrBMqL0iflgWUm8kXCFrsRzlM1qh6NLDYRxA=="
+    }
+  ]
+}

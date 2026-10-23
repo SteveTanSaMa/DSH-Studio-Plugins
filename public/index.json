@@ -1,0 +1,97 @@
+{
+  "format": 1,
+  "title": {
+    "en": "DSH Studio — Test candidates",
+    "zh": "DSH Studio · 测试候选"
+  },
+  "description": {
+    "en": "Private index prototype. Package checks do not establish functional compatibility.",
+    "zh": "私有索引原型。发布包核验不代表功能验证通过。"
+  },
+  "metadata": {
+    "categories": {
+      "usage": {
+        "title": {
+          "en": "Usage & costs",
+          "zh": "用量与费用"
+        }
+      },
+      "development": {
+        "title": {
+          "en": "Development",
+          "zh": "开发工具"
+        }
+      }
+    },
+    "labels": {
+      "candidate": {
+        "title": {
+          "en": "Test candidate",
+          "zh": "测试候选"
+        }
+      }
+    }
+  },
+  "plugins": [
+    {
+      "name": "dsh-cost-meter",
+      "title": {
+        "en": "Cost Meter",
+        "zh": "用量与费用"
+      },
+      "description": {
+        "en": "Shows usage and costs. Index test candidate; functionality has not been verified by DSH Studio.",
+        "zh": "查看用量与费用。用于索引链路测试，尚未通过 Studio 功能验证。"
+      },
+      "metadata": {
+        "category": "usage",
+        "labels": [
+          "candidate"
+        ]
+      },
+      "versions": [
+        {
+          "version": "1.9.28",
+          "publishTimestamp": 1792738578,
+          "source": {
+            "type": "npm",
+            "registry": "https://registry.npmjs.org/"
+          },
+          "engines": {
+            "dsh": ">=0.2.0-rc.1 <0.3.0-0"
+          }
+        }
+      ]
+    },
+    {
+      "name": "dsh-file-review",
+      "title": {
+        "en": "File Review",
+        "zh": "文件变更审阅"
+      },
+      "description": {
+        "en": "Reviews file changes. Index test candidate; functionality has not been verified by DSH Studio.",
+        "zh": "查看和审阅文件变更。用于索引链路测试，尚未通过 Studio 功能验证。"
+      },
+      "metadata": {
+        "category": "development",
+        "labels": [
+          "candidate"
+        ]
+      },
+      "versions": [
+        {
+          "version": "0.8.10",
+          "publishTimestamp": 1792229835,
+          "source": {
+            "type": "npm",
+            "registry": "https://registry.npmjs.org/"
+          },
+          "engines": {
+            "dsh": ">=0.2.1-rc.1 <0.2.2-0"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "schema": 1,
+  "checkedAt": "2026-10-23T11:04:00.896Z",
+  "runtimeVersion": "0.2.1-rc.2",
+  "node": "v26.12.1",
+  "validatorVersion": "0.2.1-rc.2",
+  "packages": [
+    {
+      "name": "dsh-cost-meter",
+      "version": "1.9.28",
+      "integrity": "sha512-aizlBxDGE0Q1ISvbGG25AlLMC/xRPZVCKTjPbYC348gWGoakIrgNx0++FE1M/Mncj7DHdpoSkIuGtl9oSWRzqA==",
+      "tarball": "https://registry.npmjs.org/dsh-cost-meter/-/dsh-cost-meter-1.9.28.tgz",
+      "bytes": 1173958,
+      "license": "MIT",
+      "patches": [
+        "./cordis.patch.yml"
+      ],
+      "engines": {
+        "node": ">=20",
+        "dsh": ">=0.2.0-rc.1 <0.3.0-0"
+      },
+      "publishedAt": "2026-10-23T06:56:18.952Z",
+      "packageCheck": "passed",
+      "functionalTest": "not-run"
+    },
+    {
+      "name": "dsh-file-review",
+      "version": "0.8.10",
+      "integrity": "sha512-yq38bCilGUuvhgKget6LBgyjL5HT4MkUS64TLokAPgBp0ywCOxCrBMqL0iflgWUm8kXCFrsRzlM1qh6NLDYRxA==",
+      "tarball": "https://registry.npmjs.org/dsh-file-review/-/dsh-file-review-0.8.10.tgz",
+      "bytes": 665289,
+      "license": "MIT",
+      "patches": [
+        "./cordis.patch.yml"
+      ],
+      "engines": {
+        "dsh": ">=0.2.1-rc.1 <0.2.2-0"
+      },
+      "publishedAt": "2026-10-17T09:37:15.848Z",
+      "packageCheck": "passed",
+      "functionalTest": "not-run"
+    }
+  ]
+}
