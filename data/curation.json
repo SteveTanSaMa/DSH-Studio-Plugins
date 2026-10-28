@@ -5,8 +5,8 @@
       "zh": "用量与费用"
     },
     "description": {
-      "en": "Shows usage and costs. Installation, Web loading and removal checked on macOS arm64; full functional testing pending.",
-      "zh": "查看用量与费用。已在 macOS arm64 验证安装、Web 加载及卸载，完整功能待验收。"
+      "en": "Shows usage and costs.",
+      "zh": "查看用量与费用。"
     },
     "category": "usage"
   },
@@ -16,8 +16,8 @@
       "zh": "文件变更审阅"
     },
     "description": {
-      "en": "Reviews file changes. Installation, Web loading and removal checked on macOS arm64; full functional testing pending.",
-      "zh": "查看和审阅文件变更。已在 macOS arm64 验证安装、Web 加载及卸载，完整功能待验收。"
+      "en": "Reviews file changes.",
+      "zh": "查看和审阅文件变更。"
     },
     "category": "development"
   }

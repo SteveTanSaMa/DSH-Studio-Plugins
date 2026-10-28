@@ -90,7 +90,7 @@ export function buildIndex(plugins) {
   const index = {
     format: 1,
     title: { en: 'DSH Studio — Test candidates', zh: 'DSH Studio · 测试候选' },
-    description: { en: 'Private index prototype. Package checks do not establish functional compatibility.', zh: '私有索引原型。发布包核验不代表功能验证通过。' },
+    description: { en: 'Test index. Package checks do not establish functional compatibility.', zh: '测试索引。发布包核验不代表功能验证通过。' },
     metadata: {
       categories: {
         usage: { title: { en: 'Usage & costs', zh: '用量与费用' } },
@@ -105,6 +105,18 @@ export function buildIndex(plugins) {
 export function matchingVerification(pin, runtimeVersion, records) {
   return records.filter(record => record.name === pin.name && record.version === pin.version &&
     record.integrity === pin.integrity && record.runtimeVersion === runtimeVersion);
+}
+export function candidateDescription(description, records) {
+  const verified = records.some(record => record.platform === 'macos' && record.architecture === 'arm64' &&
+    ['installation', 'webActivation', 'uninstall'].every(check => record.checks?.[check] === 'passed'));
+  const suffix = verified
+    ? { en: 'Installation, Web loading and removal checked on macOS arm64; full functional testing pending.',
+        zh: '已在 macOS arm64 验证安装、Web 加载及卸载，完整功能待验收。' }
+    : { en: 'Test candidate; installation, Web loading and removal have not all been verified for this version.',
+        zh: '测试候选，尚未完成该版本的安装、Web 加载和卸载验证。' };
+  assert.ok(description && typeof description.en === 'string' && typeof description.zh === 'string',
+    'candidate descriptions require English and Chinese');
+  return { en: `${description.en} ${suffix.en}`, zh: `${description.zh}${suffix.zh}` };
 }
 export async function build({ directory = root, fetchBytes = download } = {}) {
   const json = async path => JSON.parse(await readFile(join(directory, path), 'utf8'));
@@ -136,12 +148,12 @@ export async function build({ directory = root, fetchBytes = download } = {}) {
     const published = metadata.time?.[pin.version];
     assert.ok(Number.isFinite(Date.parse(published)), 'missing publish timestamp');
     const copy = curation[pin.name]; assert.ok(copy, 'missing editorial description');
-    plugins.push({ name: pin.name, title: copy.title, description: copy.description,
+    const checks = matchingVerification(pin, config.runtimeVersion, verification.records);
+    plugins.push({ name: pin.name, title: copy.title, description: candidateDescription(copy.description, checks),
       metadata: { category: copy.category, labels: ['candidate'] },
       versions: [{ version: pin.version, publishTimestamp: Math.floor(Date.parse(published) / 1000),
         source: { type: 'npm', registry: config.registry }, engines: { dsh: manifest.engines.dsh } }]
     });
-    const checks = matchingVerification(pin, config.runtimeVersion, verification.records);
     packages.push({ name: pin.name, version: pin.version, integrity: pin.integrity,
       tarball: tarballURL.href, bytes: bytes.length, license: manifest.license, patches,
       engines: manifest.engines, publishedAt: published, packageCheck: 'passed',

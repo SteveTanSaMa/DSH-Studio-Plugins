@@ -24,8 +24,14 @@ jobs:
       - run: npm ci --ignore-scripts --no-audit --no-fund
       - name: Test generation and preservation on failure
         run: npm test
+      - name: Validate the committed Raw index
+        run: |
+          npm run check
+          cp -R public "$RUNNER_TEMP/committed-public"
       - name: Recheck pinned upstream packages and generate candidate index
         run: npm run build
+      - name: Compare the committed Raw files with the generated result
+        run: node scripts/check-generated.mjs "$RUNNER_TEMP/committed-public" public
       - run: npm run check
       - name: Test real Harness market and isolated package lifecycle
         run: npm run test:integration
