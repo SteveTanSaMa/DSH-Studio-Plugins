@@ -5,8 +5,8 @@
     "zh": "DSH Studio · 测试候选"
   },
   "description": {
-    "en": "Private index prototype. Package checks do not establish functional compatibility.",
-    "zh": "私有索引原型。发布包核验不代表功能验证通过。"
+    "en": "Test index. Package checks do not establish functional compatibility.",
+    "zh": "测试索引。发布包核验不代表功能验证通过。"
   },
   "metadata": {
     "categories": {
